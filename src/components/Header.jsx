@@ -27,6 +27,16 @@ function Header({ feed, darkMode, toggleDarkMode, searchTerm, setSearchTerm }) {
             className="px-3 py-2 rounded bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400 w-48 sm:w-64"
           />
           <button
+            onClick={() => setSearchTerm("")}
+            className={`px-4 py-2 rounded font-medium transition-colors duration-200 ${
+              darkMode
+                ? "bg-indigo-700 text-white hover:bg-indigo-600"
+                : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
+            }`}
+          >
+            Clear Search
+          </button>
+          <button
             onClick={toggleDarkMode}
             className="ml-2 px-3 py-2 rounded bg-gray-800 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-400"
             title="Toggle dark mode"

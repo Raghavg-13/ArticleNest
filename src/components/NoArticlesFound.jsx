@@ -10,16 +10,6 @@ function NoArticlesFound({ darkMode, setSearchTerm }) {
       >
         No articles found.
       </div>
-      <button
-        onClick={() => setSearchTerm("")}
-        className={`px-4 py-2 rounded font-medium transition-colors duration-200 ${
-          darkMode
-            ? "bg-indigo-700 text-white hover:bg-indigo-600"
-            : "bg-indigo-100 text-indigo-800 hover:bg-indigo-200"
-        }`}
-      >
-        Clear Search
-      </button>
     </div>
   );
 }
