@@ -8,9 +8,10 @@ function App() {
   const [articles, setArticles] = useState([]);
   const [feed, setFeed] = useState({});
   const [filteredArticles, setFilteredArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [username, setUsername] = useState("");
 
   useEffect(() => {
     // Set dark mode based on user preference
@@ -20,25 +21,24 @@ function App() {
     ) {
       setDarkMode(true);
     }
-
-    const fetchArticles = async () => {
-      try {
-        const response = await fetch(
-          `https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@` //add your username at the lastss
-        );
-        const data = await response.json();
-        setFeed(data.feed);
-        setArticles(data.items);
-        setFilteredArticles(data.items);
-        setLoading(false);
-      } catch (error) {
-        console.error("Failed to fetch articles", error);
-        setLoading(false);
-      }
-    };
-
-    fetchArticles();
   }, []);
+
+  const fetchArticles = async (user) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@${user}`
+      );
+      const data = await response.json();
+      setFeed(data.feed);
+      setArticles(data.items);
+      setFilteredArticles(data.items);
+      setLoading(false);
+    } catch (error) {
+      console.error("Failed to fetch articles", error);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Fix search functionality by searching in both title and content
@@ -68,7 +68,25 @@ function App() {
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
       />
-
+      {/* Username Input */}
+      <div className="flex justify-center items-center py-4">
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter Medium username"
+          className="px-3 py-2 rounded bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400 w-64 shadow"
+        />
+        <button
+          onClick={() => {
+            fetchArticles(username);
+            setUsername(""); // Clear input after fetching
+          }}
+          className="ml-2 px-4 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+        >
+          Fetch
+        </button>
+      </div>
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
@@ -85,7 +103,6 @@ function App() {
                 darkMode={darkMode}
               />
             )}
-
             {/* Article Grid */}
             {filteredArticles.length > 0 ? (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
